@@ -1,66 +1,26 @@
-# Modflared (Forge 1.12.2 Port)
+# Modflared
+Automatically connects you to a [Cloudflare tunnel](https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/) without having to install [cloudflared](https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/install-and-setup/installation/) separately.
 
-<div align="center">
-  <img src="src/main/resources/modflared.png" width="128" height="128" alt="Modflared Logo">
-  <br>
-  <p><b>Automatically connect to Cloudflare tunnels in Minecraft Forge 1.12.2</b></p>
-</div>
+*Note: This is a backport of [HttpRafa's Modflared](https://github.com/HttpRafa/modflared) for Minecraft Forge 1.12.2.*
 
----
+## How to use
+To be able to use the mod you have to be on the operating system Windows, Linux, or MacOS. Players simply need to install this mod in their `mods` folder and connect to your configured server domain.
 
-## 🌟 Overview
-**Modflared** is a client-side mod that automatically downloads and manages the `cloudflared` binary, allowing players to connect to your Minecraft server securely via Cloudflare Tunnels without needing to configure or install anything manually.
+## Other resources
+For more detailed instructions, you can read [Adalie's blog post](https://dacubeking.com/2024/02/28/Proxying-Minecraft.html).
 
-This is a port of the original Modflared project, fully backported to the classic Minecraft Forge 1.12.2.
+## Configuring Cloudflared
+You need to set up cloudflare on your server for this to work. There's plenty of guides on how to do this elsewhere.  
+Make sure in your config file (possibly in `/etc/cloudflared/config.yml`) you have the lines:
+```YML
+- hostname: example.domain.net
+  service: tcp://localhost:25565
+```
+Replace `example.domain.net` with the correct subdomain you want to use. If you're running multiple instances (eg. with docker), change the port 25565 to whatever port you're using.  
+Restart the cloudflare daemon (`sudo systemctl restart cloudflared`) to apply the changes.
 
-> ✨ *Note: This port is fully **vibe coded**, with an emphasis on seamless UX, custom icon badges, and flawless backend tunneling.*
+Add the correct DNS entry: go to [Cloudflare dashboard](https://dash.cloudflare.net) and add a `TXT` record on your domain:
+- **Name:** Your subdomain (e.g. `example.domain.net`)
+- **Content:** `cloudflared-use-tunnel`
 
-### Credits
-* **Original Creator:** [HttpRafa](https://github.com/HttpRafa)
-
----
-
-## 🚀 Features
-* **Zero Configuration for Players:** Players just type the domain name; the mod handles the rest invisibly.
-* **Auto-Detection (DNS TXT):** If your domain has the correct DNS records, the mod kicks in automatically!
-* **Server List UI Integration:** Custom Cloudflare indicator badges dynamically show when a connection is safely tunneled.
-* **Invisible Background Daemon:** Downloads and runs the Cloudflare tunnel client in the background exclusively when needed.
-
----
-
-## 🛠️ For Server Owners: Setup Guide
-
-To let your players connect automatically without forcing them to configure local IPs:
-
-1. **Host your Server via Cloudflare Tunnel.**
-2. Set up a **DNS TXT Record** on the domain you use for your server:
-   - **Type:** `TXT`
-   - **Name:** Your subdomain (e.g. `play.yourdomain.com`)
-   - **Value:** `cloudflared-use-tunnel`
-3. Tell your players to download **Modflared** and connect to your domain normally. That's it!
-
-*(Alternatively, players can manually add IPs to `.minecraft/modflared/forced_tunnels.json` if you do not own the domain).*
-
----
-
-## 💻 Building from Source
-
-This project uses ForgeGradle.
-
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/YourName/modflared-1.12.2.git
-   cd modflared-1.12.2
-   ```
-
-2. Build the JAR:
-   ```bash
-   ./gradlew build
-   ```
-
-3. Find the compiled output in `build/libs/`.
-
----
-
-## 📄 License
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This TXT record is what tells the client-side mod to automatically engage the Cloudflare Tunnel!
