@@ -28,3 +28,18 @@ Add the correct DNS entry: go to [Cloudflare dashboard](https://dash.cloudflare.
 - **Content:** `cloudflared-use-tunnel`
 
 This TXT record is what tells the client-side mod to automatically engage the Cloudflare Tunnel!
+
+## Manual Fallback (Forced Tunnels)
+If auto-detection doesn't work, or if you don't own a domain name and use a raw IP, players can manually force the tunnel.
+
+1. Open your `.minecraft` folder (or instance folder).
+2. Go into the `modflared` folder.
+3. Open `forced_tunnels.json` in a text editor.
+4. Add the server IP or domain inside the brackets, surrounded by quotes:
+
+```json
+[
+  "your.server.ip.here"
+]
+```
+*(You can add multiple servers separated by commas: `["server1.com", "server2.com"]`)*
