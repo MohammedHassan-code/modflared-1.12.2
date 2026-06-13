@@ -1,9 +1,11 @@
-# Modflared (1.12.2 Port)
-> ⚠️ **UNOFFICIAL BACKPORT:** This is an unofficial port of [HttpRafa's Modflared](https://github.com/HttpRafa/modflared). This is not the official repository and is not maintained by the original creator.
+# Modflared (FORGE 1.12.2)
+> ⚠️ **UNOFFICIAL FORGE BACKPORT:** This is an unofficial port of [HttpRafa's Modflared](https://github.com/HttpRafa/modflared). This is not the official repository and is not maintained by the original creator.
+
+> 🛑 **WARNING - FORGE ONLY:** This mod is **strictly** for Minecraft Forge 1.12.2. Do **NOT** download this if you are using Fabric, NeoForge, Quilt, or any other modern mod loader. It will not work!
 
 Automatically connects you to a [Cloudflare tunnel](https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/) without having to install [cloudflared](https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/install-and-setup/installation/) separately.
 
-*Note: This is a backport of [HttpRafa's Modflared](https://github.com/HttpRafa/modflared) specifically for Minecraft Forge 1.12.2.*
+*Note: This is a backport of [HttpRafa's Modflared](https://github.com/HttpRafa/modflared) built exclusively for Minecraft Forge 1.12.2.*
 
 ## How to use
 To be able to use the mod you have to be on the operating system Windows, Linux, or MacOS. Players simply need to install this mod in their `mods` folder and connect to your configured server domain.
