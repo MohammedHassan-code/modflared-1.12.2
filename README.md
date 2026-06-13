@@ -11,13 +11,12 @@
 ## 🌟 Overview
 **Modflared** is a client-side mod that automatically downloads and manages the `cloudflared` binary, allowing players to connect to your Minecraft server securely via Cloudflare Tunnels without needing to configure or install anything manually.
 
-This is a **port of the original project** built for modern versions, fully backported to Minecraft Forge 1.12.2.
+This is a port of the original Modflared project, fully backported to the classic Minecraft Forge 1.12.2.
 
 > ✨ *Note: This port is fully **vibe coded**, with an emphasis on seamless UX, custom icon badges, and flawless backend tunneling.*
 
 ### Credits
-* **Original Creator:** [HttpRafa](https://github.com/HttpRafa) - (Original NeoForge versions)
-* **1.12.2 Port & Enhancements:** Ruby
+* **Original Creator:** [HttpRafa](https://github.com/HttpRafa)
 
 ---
 
