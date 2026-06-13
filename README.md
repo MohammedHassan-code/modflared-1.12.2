@@ -1,9 +1,9 @@
-# Modflared (1.12.2 Port)
+# Modflared (Forge 1.12.2 Port)
 
 <div align="center">
   <img src="src/main/resources/modflared.png" width="128" height="128" alt="Modflared Logo">
   <br>
-  <p><b>Automatically connect to Cloudflare tunnels in Minecraft 1.12.2</b></p>
+  <p><b>Automatically connect to Cloudflare tunnels in Minecraft Forge 1.12.2</b></p>
 </div>
 
 ---
