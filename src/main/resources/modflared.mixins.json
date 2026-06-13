@@ -1,0 +1,19 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "dev.httxrafa.modflared.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "refmap": "modflared.refmap.json",
+  "mixins": [
+    "NetworkManagerMixin",
+    "client.GuiConnectingMixin",
+    "client.GuiConnectingThreadMixin",
+    "client.ServerDataMixin",
+    "client.ServerListEntryNormalMixin",
+    "client.ServerPingerMixin"
+  ],
+  "client": [],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

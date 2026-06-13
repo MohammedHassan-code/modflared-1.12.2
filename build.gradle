@@ -1,0 +1,142 @@
+buildscript {
+    // Compute Prism Launcher libraries path inside buildscript scope
+    def prismLibDir = new File(System.getenv("APPDATA") + "/PrismLauncher/libraries")
+    repositories {
+        // Local Prism Launcher library cache (fastest, no network needed)
+        if (prismLibDir.exists()) {
+            maven { url = prismLibDir.toURI().toString() }
+        }
+        maven {
+            url = 'https://maven.minecraftforge.net'
+            metadataSources { artifact() }
+        }
+        maven { url = 'https://files.minecraftforge.net/maven' }
+        maven { url = 'https://maven.minecraftforge.net/archive/' }
+        jcenter()
+        maven { url = 'https://repo.spongepowered.org/repository/maven-public/' }
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+        classpath 'org.spongepowered:mixingradle:0.6-SNAPSHOT'
+    }
+}
+
+apply plugin: 'net.minecraftforge.gradle.forge'
+apply plugin: 'org.spongepowered.mixin'
+apply plugin: 'java'
+
+group = mod_group_id
+version = mod_version
+archivesBaseName = mod_id
+
+sourceCompatibility = targetCompatibility = '1.8'
+
+// Prism Launcher libraries path for main build repos
+def prismLibraries = new File(System.getenv("APPDATA") + "/PrismLauncher/libraries")
+
+repositories {
+    if (prismLibraries.exists()) {
+        maven { url = prismLibraries.toURI().toString() }
+    }
+    maven {
+        url = 'https://maven.minecraftforge.net'
+        metadataSources { artifact() }
+    }
+    maven { url = 'https://files.minecraftforge.net/maven' }
+    maven { url = 'https://maven.minecraftforge.net/archive/' }
+    jcenter()
+    maven { url = 'https://repo.spongepowered.org/repository/maven-public/' }
+    mavenCentral()
+}
+
+dependencies {
+    compile 'org.spongepowered:mixin:0.8.2'
+    testCompile 'junit:junit:4.13.2'
+}
+
+minecraft {
+    version = "${minecraft_version}-${forge_version}"
+    runDir = 'run'
+    mappings = mcp_mappings
+    clientJvmArgs += [
+            '-Dfml.coreMods.load=dev.httxrafa.modflared.mixin.ModflaredMixinLoader'
+    ]
+}
+
+mixin {
+    defaultObfuscationEnv searge
+    // Write the refmap into the main output dir so it's included in the jar
+    add sourceSets.main, 'modflared.refmap.json'
+}
+
+processResources {
+    inputs.property 'version', project.version
+    inputs.property 'mcversion', minecraft_version
+    filesMatching('mcmod.info') {
+        expand([
+                version: project.version,
+                mcversion: minecraft_version,
+                mod_id: mod_id,
+                mod_name: mod_name,
+                mod_description: mod_description,
+                mod_authors: mod_authors,
+                mod_license: mod_license
+        ])
+    }
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+    options.compilerArgs += ['-Xlint:unchecked', '-Xlint:deprecation']
+}
+
+jar {
+    manifest {
+        attributes(
+                'FMLCorePluginContainsFMLMod': 'true',
+                'FMLCorePlugin': 'dev.httxrafa.modflared.mixin.ModflaredMixinLoader',
+                'TweakClass': 'org.spongepowered.asm.launch.MixinTweaker',
+                'TweakOrder': '0',
+                'MixinConfigs': 'modflared.mixins.json'
+        )
+    }
+    rename 'mixin.refmap.json', 'modflared.refmap.json'
+}
+
+tasks.extractAnnotationsJar.enabled = false
+
+task shadowJar(type: Jar) {
+    classifier = 'all'
+    // Use reobfuscated jar - reobfJar translates all MC method/field calls MCP->SRG
+    from { zipTree(jar.archivePath) }
+    // Bundle Mixin jar contents
+    from {
+        configurations.compile.filter { dep ->
+            dep.name.contains('mixin')
+        }.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+    // Include the Mixin refmap (maps @Inject/@Redirect targets MCP->SRG at runtime)
+    from('build/tmp/compileJava/') {
+        include 'compileJava-refmap.json'
+        rename 'compileJava-refmap.json', 'modflared.refmap.json'
+    }
+    exclude 'META-INF/*.SF'
+    exclude 'META-INF/*.DSA'
+    exclude 'META-INF/*.RSA'
+    manifest {
+        attributes(
+                'FMLCorePluginContainsFMLMod': 'true',
+                'FMLCorePlugin': 'dev.httxrafa.modflared.mixin.ModflaredMixinLoader',
+                'TweakClass': 'org.spongepowered.asm.launch.MixinTweaker',
+                'TweakOrder': '0',
+                'MixinConfigs': 'modflared.mixins.json'
+        )
+    }
+}
+
+shadowJar.dependsOn reobfJar
+shadowJar.dependsOn processResources
+build.dependsOn shadowJar
+
+
